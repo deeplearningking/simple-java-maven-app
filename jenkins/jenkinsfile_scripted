@@ -1,0 +1,25 @@
+node ('slave1'){
+	stage('Build'){
+	
+		docker.image('maven:3-alpine').inside {
+	
+			sh 'mvn -B -DskipTests clean package'
+			
+		}
+	
+	}
+	
+	stage('Test'){
+		
+		sh 'mvn test'
+		junit 'target/surefire-reports/*.xml'
+	
+	}
+	
+	stage('Deploy'){
+	
+		sh './jenkins/scripts/deliver.sh'
+	
+	}
+	
+}
